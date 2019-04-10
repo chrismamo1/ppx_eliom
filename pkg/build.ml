@@ -16,16 +16,6 @@ let exts_modlib = List.filter except Exts.module_library
 let exts_lib = List.filter except Exts.library
 
 let _ =
-  list_to_file "src/lib/client/client.mllib" client_mllib;
-  list_to_file "src/lib/client/api.odocl" client_api;
-
-  list_to_file "src/lib/server/server.mllib" server_mllib;
-  list_to_file "src/lib/server/server.mldylib" server_mllib;
-  list_to_file "src/lib/server/api.odocl" server_api;
-
-  list_to_file "src/ocamlbuild/ocamlbuild.mllib" ocamlbuild_mllib;
-  list_to_file "src/ocamlbuild/ocamlbuild.mldylib" ocamlbuild_mllib;
-  list_to_file "src/ocamlbuild/api.odocl" ocamlbuild_api;
 
   list_to_file "src/ppx/ppx.mllib" ppx_mllib;
   list_to_file "src/ppx/ppx.mldylib" ppx_mllib;
@@ -64,25 +54,6 @@ let () =
     Pkg.man ~cond:with_man3 ~dst:"man3/%.3o"  ~target:"src/ocamlbuild/api.mandocdir/man.3o"  "src/ocamlbuild/api.mandocdir/%.3o";
     Pkg.man ~cond:with_man3 ~dst:"man3/%.3o"  ~target:"src/ppx/api.mandocdir/man.3o"  "src/ppx/api.mandocdir/%.3o";
 
-    (* TOOLS *)
-    Pkg.bin ~auto:true "src/tools/eliomc";
-    Pkg.bin ~auto:true "src/tools/eliomcp";
-    Pkg.bin ~auto:true "src/tools/eliomdep";
-    Pkg.bin ~auto:true "src/tools/eliomopt";
-    Pkg.bin ~auto:true "src/tools/js_of_eliom";
-    Pkg.bin ~auto:true "src/tools/eliomdoc";
-    Pkg.bin ~auto:true "src/tools/eliompp";
-    Pkg.bin ~auto:true ~dst:"eliom-distillery" "src/tools/distillery";
-    Pkg.bin ~auto:true "src/ocamlbuild/eliombuild";
-
-    (* SYNTAXES *)
-    Pkg.lib ~exts:exts_syntax ~dst:"syntax/pa_eliom_seed" "src/syntax/pa_eliom_seed";
-    Pkg.lib ~exts:exts_syntax ~dst:"syntax/pa_eliom_client_client" "src/syntax/pa_eliom_client_client";
-    Pkg.lib ~exts:exts_syntax ~dst:"syntax/pa_eliom_client_server" "src/syntax/pa_eliom_client_server";
-    Pkg.lib ~exts:exts_syntax ~dst:"syntax/pa_eliom_type_filter" "src/syntax/pa_eliom_type_filter";
-
-    Pkg.lib ~exts:exts_modlib ~dst:"ocamlbuild/ocamlbuild_eliom" "src/ocamlbuild/ocamlbuild_eliom";
-
     (* PPX *)
     Pkg.lib ~exts:Exts.module_library ~dst:"ppx/ppx_eliom" "src/ppx/ppx_eliom";
     Pkg.lib ~exts:Exts.module_library ~dst:"ppx/ppx_eliom_client" "src/ppx/ppx_eliom_client";
@@ -93,19 +64,7 @@ let () =
     Pkg.bin ~auto:true ~dst:"ppx_eliom_server" "src/ppx/ppx_eliom_server_ex" ;
     Pkg.bin ~auto:true ~dst:"ppx_eliom_types" "src/ppx/ppx_eliom_types_ex"
 
-  ] @ (
-    (* CLIENT LIBS *)
-    Pkg.lib ~dst:"client/client" ~exts:[".cma"] "src/lib/client/client" ::
-    Pkg.lib ~dst:"client/eliom_client_main.cmo" "src/lib/client/eliom_client_main.cmo" ::
-    Pkg.lib ~dst:"client/eliom_client.js" "src/lib/client/eliom_client.js" ::
-    List.map (fun x -> Pkg.lib ~dst:(spf "client/%s" x) (spf "src/lib/client/%s" x)) client_extra
-  ) @ (
-    (* SERVER LIBS *)
-    Pkg.lib ~dst:"server/monitor/eliom_monitor" ~exts:Exts.module_library "src/lib/server/monitor/eliom_monitor" ::
-    Pkg.lib ~dst:"server/monitor/eliom_monitor_main" ~exts:Exts.module_library "src/lib/server/monitor/eliom_monitor_main" ::
-    Pkg.lib ~dst:"server/server" ~exts:exts_lib "src/lib/server/server" ::
-    List.map (fun x -> Pkg.lib ~dst:(spf "server/%s" x) (spf "src/lib/server/%s" x)) server_extra
-  ) @ [
+  ] @ [
     (* MISC *)
 
     Pkg.doc "README.md";
